@@ -3,20 +3,18 @@ import java.util.Scanner;
 public class challange13 {
 	public static void main (String[] args) {
 		Scanner myScanner = new Scanner(System.in);
-		int xCoord;
-		int yCoord;
-		String locationMsg = "We dont know where the enimy is.";
+		String locationMsg = "ERROR: no data on enimy.";
 		
 		System.out.println("What is the X coordinate?");
-		xCoord = myScanner.nextInt();
+		int xCoord = myScanner.nextInt();
 		System.out.println("What is the Y coordinate?");
-		yCoord = myScanner.nextInt();
+		int yCoord = myScanner.nextInt();
 		
 		if (xCoord == 0 && yCoord == 0) {
 			locationMsg = "The enimy is here!";							//Here
 		} else if (xCoord == 0 && yCoord > 0) {
 			locationMsg = "The enimy is north";							//North
-		} else if (yCoord > 0 || xCoord > 0) {
+		} else if (yCoord > 0 && xCoord > 0) {
 			locationMsg = "the enimy is to the north east";				//North east
 		} else if (xCoord > 0 && yCoord == 0) {
 			locationMsg = "The enimy is east.";							//East

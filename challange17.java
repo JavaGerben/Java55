@@ -27,8 +27,9 @@ public class challange17 {
 				colourText = "\u001B[33m";		//yellow text
 			} else {
 				countMsg = "Normal";
+				colourText = "\u001B[37m";
 			}
-			System.out.println (colourText + 1 + ": " + countMsg);
+			System.out.println (colourText + i + ": " + countMsg);
 			System.out.print("\u001B[37m"); 	//set colour of text back to white
 		}
 	}
