@@ -44,7 +44,7 @@ public class Snail {
 	private static void snailPath (int[][] playingField) {
 		int rowLength = playingField.length - 1;
 		
-		//loop if the playing field is bigger then 2 x 2
+		
 		for (int circleCount = 0; circleCount * 2 <= rowLength; circleCount++) {
 			
 			//prints all lines from left to right
