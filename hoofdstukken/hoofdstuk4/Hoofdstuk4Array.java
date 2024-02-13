@@ -1,4 +1,4 @@
-package hoofdstuk4;
+package hoofdstukken.hoofdstuk4;
 import util.*;
 import java.util.*;
 
