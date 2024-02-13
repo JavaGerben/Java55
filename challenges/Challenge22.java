@@ -1,4 +1,4 @@
-package manticore;
+package challenges;
 import util.*;
 
 public class Challenge22 {
