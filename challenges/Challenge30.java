@@ -22,14 +22,14 @@ public class Challenge30 {
 		cardType(randomCard);
 	}
 	
-	static void cardType (Card card) {
+	private static void cardType (Card card) {
 		if (card.getRank() == CardRank.DOLLAR || card.getRank() == CardRank.PERCENT || card.getRank() == CardRank.CARET)
 			System.out.println("This is a symbol card.");
 		else
 			System.out.println("This is a numbered card.");
 	}
 	
-	static int randomNumber(int x) {
+	private static int randomNumber(int x) {
 		double randomNumber = Math.random() * x;
 		return (int)randomNumber;
 	}
