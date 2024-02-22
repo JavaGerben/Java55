@@ -171,7 +171,7 @@ class InventoryItem {
 	}
 	
 	@Override 
-		public String toString() {
+	public String toString() {
 		return this.getClass().getName();
 	}
 }
