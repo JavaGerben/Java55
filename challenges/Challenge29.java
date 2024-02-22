@@ -14,16 +14,18 @@ class Color {
 	private int redValue;
 	private int greenValue;
 	private int blueValue;
+	private Color madeColors;
 	private String color;
 	
-	final static String white = "White (255, 255, 255)";
-	final static String black = "Black (0, 0, 0)";
-	final static String red = "Red (255, 0, 0)";
-	final static String orange = "Orange (255,165, 0)";
-	final static String yellow = "Yellow (255, 255, 0)";
-	final static String green = "Green (0, 128, 0)";
-	final static String blue = "Blue (0, 0, 255)";
-	final static String purple = "Purple (128, 0, 128)";
+	
+	final static Color white = new Color(255, 255, 255);
+	final static Color black = new Color(0, 0, 0);
+	final static Color red = new Color(255, 0, 0);
+	final static Color orange = new Color(255,165, 0);
+	final static Color yellow = new Color(255, 255, 0);
+	final static Color green = new Color(0, 128, 0);
+	final static Color blue = new Color(0, 0, 255);
+	final static Color purple = new Color(128, 0, 128);
 	
 	
 	public Color (int redValue, int greenValue, int blueValue) {
@@ -34,7 +36,7 @@ class Color {
 	}
 	
 	public Color (String colorName) {
-		color = switch(colorName.toLowerCase()) {
+		madeColors = switch(colorName) {
 			case "white" 	-> white;
 			case "black" 	-> black;
 			case "red" 		-> red;
@@ -45,11 +47,14 @@ class Color {
 			case "purple" 	-> purple;
 			default			-> null;
 		};
+		
 	}
 	
 	public String getColor() {
-		return color;
+		if (color == null) {
+			return madeColors.getColor();
+		} else {
+			return color;
+		}
 	}
 }
-
-//ik denk dat dit de opdracht was. maar ik vond het niet duidelijk uitgelegd. dit werkt in ieder geval ^^
