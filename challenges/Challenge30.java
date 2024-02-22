@@ -2,15 +2,13 @@ import java.lang.Math;
 
 public class Challenge30 {
 	public static void main (String[] args) {
-		for (CardColor cColor : CardColor.values()) {
-			for (CardRank cRank : CardRank.values()) {
-				Card temp = new Card(cColor, cRank);
-				System.out.println(temp.getColor() + " " + temp.getRank().getValue());
+		for (CardColor Color : CardColor.values()) {
+			for (CardRank Rank : CardRank.values()) {
+				Card card = new Card(Color, Rank);
+				System.out.println(card.getColor() + " " + card.getRank().getValue());
 			}
 		}
 		System.out.println();
-		
-		
 		
 		int randColorNumber = randomNumber(CardColor.values().length);
 		int randRankNumber = randomNumber(CardRank.values().length);
@@ -19,6 +17,7 @@ public class Challenge30 {
 		
 		Card randomCard = new Card(randColor, randRank);
 		
+		System.out.println("Random card:");
 		System.out.println(randomCard.getColor() + " " + randomCard.getRank().getValue());
 		cardType(randomCard);
 	}
@@ -56,7 +55,8 @@ enum CardRank {
 	TEN("10"),
 	DOLLAR("$"), 
 	PERCENT("%"), 
-	CARET("^");
+	CARET("^"),
+	AMPERSAND("&");
 	
 	private String value;
 	private CardRank(final String value) {
