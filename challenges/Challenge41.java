@@ -2,29 +2,35 @@ import java.util.*;
 
 public class Challenge41 {
 	public static void main(String[] args) {
+		Coordinates coordinate1 = newCoordinate();
+		Coordinates coordinate2 = newCoordinate();
+		
+		System.out.println (compare(coordinate1, coordinate2));
+	}
+	
+	static Coordinates newCoordinate () {
 		Scanner myScanner = new Scanner(System.in);
 		
-		System.out.println("Input how big of a grid you want:");
-		int gridSize = myScanner.nextInt();
-		Coordinates grid = new Coordinates(gridSize);
-		
-		System.out.println(grid.getCoordinates());
-		
+		System.out.println("Please enter a coordinate with a space inbetween X and Y.");
+		String[] coordinatesIn = myScanner.nextLine().split(" ");
+	
+		Coordinates coordinate = new Coordinates(Integer.valueOf(coordinatesIn[0]), Integer.valueOf(coordinatesIn[1]));
+		return coordinate;
+	}
+	
+	static boolean compare (Coordinates coordinate1, Coordinates coordinate2) {
+		if (coordinate1.X() == coordinate2.X()) {
+			if (coordinate1.Y() == coordinate2.Y()-1 || coordinate1.Y() == coordinate2.Y()+1) {
+				return true;
+			}
+		}
+		if (coordinate1.Y() == coordinate2.Y()) {
+			if (coordinate1.X() == coordinate2.X()-1 || coordinate1.X() == coordinate2.X()+1) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
-public class Coordinates {
-	private HashMap<Integer, Integer> coordinates = new HashMap<>();
-	
-	public Coordinates (int gridSize) {
-		for (int rows = 0; rows < gridSize; rows++) {
-			for (int coloms = 0; coloms < gridSize; coloms++) {
-				System.out.println(rows + " " + coloms);
-			}
-		}
-	}
-	
-	public HashMap getCoordinates() {
-		return coordinates;
-	}
-}
+public record Coordinates (int X, int Y) { }
