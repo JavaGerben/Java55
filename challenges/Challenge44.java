@@ -16,40 +16,47 @@ public class Challenge44 {
 			System.out.println("4) Continue the game you were playing.");
 		}
 		
-		boolean validMenuChoise = true;
+		boolean validMenuChoise = false;
 		do {
-			switch(stringToInt(textInput("menu"))) {
-				case 1:
+			String input = myScanner.nextLine();
+			switch(input) { //textInput("menu")
+				case "1":
 					newGame();
 					validMenuChoise = true;
 					break;
-				case 2:
-					showInfo("menu");
+				case "2":
+					showInfo();
 					validMenuChoise = true;
 					break;
-				case 3:
+				case "3":
 					System.out.println("You have quit the game.");
 					validMenuChoise = true;
 					break;
-				case 4:
+				case "4":
 					if (game != null) {
-						//player turn
+						playerTurn();
 						validMenuChoise = true;
-						System.out.println("This is not a valid choice, please enter a valid choice.");
 					} else {
 						validMenuChoise = false;
 						System.out.println("This is not a valid choice, please enter a valid choice.");
 					}
 					break;
 				default:
-					validMenuChoise = false;
+					if (!defaultFunctionExecuted(input)) {
+						System.out.println("This is not a valid choice, please enter a valid choice.");
+						validMenuChoise = false;
+					} else {
+						validMenuChoise = true;
+					}
 					break;
 			}
-		} while (validMenuChoise == false);
+		} while (!validMenuChoise);
 	}
 	
-	static void newGame() {
+	static void newGame () {
 		int fieldSize = 0;
+		boolean validMenuChoise = true;
+		
 		do {
 			System.out.println();
 			System.out.println("How big do you want the field to be?");
@@ -57,27 +64,38 @@ public class Challenge44 {
 			System.out.println("2) 6x6");
 			System.out.println("3) 8x8");
 			
-			switch(stringToInt(textInput("newGame"))) {
-				case 1:
+			String input = myScanner.nextLine();
+			
+			switch(input) {
+				case "1":
 					fieldSize = 4;
+					validMenuChoise = true;
 					break;
-				case 2:
+				case "2":
 					fieldSize = 6;
+					validMenuChoise = true;
 					break;
-				case 3:
+				case "3":
 					fieldSize = 8;
+					validMenuChoise = true;
+					break;
 				default:
-					System.out.println("This is not a valid choice, please enter a valid choice.");
+					if (!defaultFunctionExecuted(input)) {
+						System.out.println("This is not a valid choice, please enter a valid choice.");
+						validMenuChoise = false;
+					} else {
+						validMenuChoise = true;
+					}
+					break;
 			};
-		} while (fieldSize == 0);
-		System.out.println();
-		
+		} while (!validMenuChoise);
 		game = new Game(fieldSize);
+		System.out.println("You created a new game with a field size of " + fieldSize + "x" + fieldSize + ".");
 		
+		playerTurn();
 	}
 	
-	static String textInput(String previousAction) {
-		String input = myScanner.nextLine();
+	static boolean defaultFunctionExecuted (String input) {
 		switch (input.toLowerCase()) {
 			case "quit":
 				System.out.println("You have quit the game.");
@@ -86,26 +104,15 @@ public class Challenge44 {
 				mainMenu();
 				break;
 			case "help":
-				showInfo(previousAction);
+				showInfo();
 				break;
 			default:
-				return input;
+				return false;
 		}
-		return null;
+		return true;
 	}
 	
-	static int stringToInt(String input) {
-		int number;
-		try {
-			number = Integer.parseInt(input);
-		} catch (NumberFormatException ex) {
-			System.out.println("Please enter a valid input.");
-			number = stringToInt(myScanner.nextLine());
-		}
-		return number;
-	}
-	
-	static void showInfo (String action) {
+	static void showInfo () {
 		System.out.println();
 		System.out.println("You will start at the entrance and you can move between other rooms by typing commands like the following:\n" +
 						   "\"move north\", \"move south\", \"move east\", and \"move west\". You are not be able to move past the end of the map.\n" +
@@ -119,19 +126,60 @@ public class Challenge44 {
 						   "\"help\" to show this info again.\n" +
 						   "\"quit\" to quit the game.");
 		System.out.println();
-		System.out.println("Now returning to the previous action.");
 		
-		// switch (action) {
-			// case "menu":
-				// mainMenu();
-				// break;
-			// case "newGame":
-				// newGame();
-				// break;
-			// case "playerTurn":
-				// playerTurn();
-				// break;
-		// }
+		mainMenu();
+	}
+	
+	static void playerTurn() {
+		Player player = game.getPlayer();
+		System.out.println();
+		System.out.println("You are in the room at (Row = " + player.getPos().x() + ", Column = " + player.getPos().y() + ").");
+		
+		RoomType roomType = game.getRoomType(player.getPos());
+		switch (roomType) {
+			case RoomType.ENTRANCE:
+				System.out.println("You see light coming from the cavern entrance.");
+				break;
+			case RoomType.FOUNTAIN:
+				break;
+		}
+		
+		System.out.print("What do you want to do? ");
+		boolean validMenuChoise = false;
+		do {
+			String input = myScanner.nextLine().toLowerCase();
+			switch(input) {
+				case "move north":
+					validMenuChoise = true;
+					//check if move in that derection is possible
+					player.setPos(player.getPos().x(), player.getPos().y()+1)
+					break;
+				case "move east":
+					//check if move in that derection is possible
+					player.setPos(player.getPos().x()+1, player.getPos().y())
+					validMenuChoise = true;
+					break;
+				case "move south":
+					//check if move in that derection is possible
+					player.setPos(player.getPos().x(), player.getPos().y()-1)
+					validMenuChoise = true;
+					break;
+				case "move west":
+					//check if move in that derection is possible
+					player.setPos(player.getPos().x()-1, player.getPos().y())
+					validMenuChoise = true;
+					break;
+				default:
+					if (!defaultFunctionExecuted(input)) {
+						System.out.println("This is not a valid choice, please enter a valid choice.");
+						validMenuChoise = false;
+					} else {
+						validMenuChoise = true;
+					}
+					break;
+			}
+		} while (!validMenuChoise);
+		
 	}
 }
 
@@ -169,6 +217,11 @@ class Game {
 	
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public RoomType getRoomType(Coordinate coordinate) {
+		Room room = coordinates.get(coordinate);
+		return room.getRoomType();
 	}
 }
 
