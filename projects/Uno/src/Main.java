@@ -105,30 +105,30 @@ enum CardColor {
     public String getValue() {
         return value;
     }
+}    ZERO("0"),
+ONE("1"),
+TWO("2"),
+THREE("3"),
+FOUR("4"),
+FIVE("5"),
+SIX("6"),
+SEVEN("7"),
+EIGHT("8"),
+NINE("9"),
+DRAW("draw"),
+REVERSE("reverse"),
+SKIP("skip");
+
+private final String value;
+CardCharacter(String value) {
+    this.value = value;
 }
+
+public String getValue() {
+    return value;
+}
+
 enum CardCharacter {
-    ZERO("0"),
-    ONE("1"),
-    TWO("2"),
-    THREE("3"),
-    FOUR("4"),
-    FIVE("5"),
-    SIX("6"),
-    SEVEN("7"),
-    EIGHT("8"),
-    NINE("9"),
-    DRAW("draw"),
-    REVERSE("reverse"),
-    SKIP("skip");
-
-    private final String value;
-    CardCharacter(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
 }
 class Card {
     CardColor cardColor;
