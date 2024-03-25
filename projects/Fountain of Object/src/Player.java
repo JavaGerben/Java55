@@ -20,7 +20,7 @@ class Player {
     }
 
     public void setStatus (PlayerStatus status) {
-        if (status == PlayerStatus.ALIVE) {
+        if (this.status == PlayerStatus.ALIVE) {
             this.status = status;
         }
     }
