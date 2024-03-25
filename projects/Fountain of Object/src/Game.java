@@ -26,6 +26,7 @@ class Game {
         randomRoomPlacement(RoomType.ENTRANCE, 1);
         randomRoomPlacement(RoomType.FOUNTAIN, 1);
         randomRoomPlacement(RoomType.MAELSTROM, multipleRoomsCount);
+        randomRoomPlacement(RoomType.AMAROK, multipleRoomsCount);
         randomRoomPlacement(RoomType.PIT, multipleRoomsCount);
     }
     private void randomRoomPlacement(RoomType roomType, int times) {

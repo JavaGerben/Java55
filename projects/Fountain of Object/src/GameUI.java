@@ -103,22 +103,19 @@ class GameUI {
         }
     }
     void winStatus () {
-        if (game.getRoomType(game.getPlayer().getPos()) == RoomType.PIT) {
+        if (game.getRoomType(game.getPlayer().getPos()) == RoomType.PIT || game.getRoomType(game.getPlayer().getPos()) == RoomType.AMAROK) {
             game.getPlayer().setStatus(PlayerStatus.DEAD);
         }
-        boolean playerEntrance = game.getRoomType(game.getPlayer().getPos()) == RoomType.ENTRANCE;
-        boolean inMaelstromRoom = game.getRoomType(game.getPlayer().getPos()) == RoomType.MAELSTROM;
-        boolean playerAlive = game.getPlayer().getStatus() == PlayerStatus.ALIVE;
 
-        if (!playerAlive) {
+        if (game.getPlayer().getStatus() == PlayerStatus.DEAD) {
             spacer();
             printColor("red", "You lost, because you have died.");
             mainMenu();
-        } else if (game.checkFountain() && playerEntrance) {
+        } else if (game.checkFountain() && game.getRoomType(game.getPlayer().getPos()) == RoomType.ENTRANCE) {
             spacer();
             //"You have won" in different color letters
             System.out.println("\u001B[31mY\u001B[32mo\u001B[33mu \u001B[34mh\u001B[35ma\u001B[36mv\u001B[37me \u001B[32mw\u001B[33mo\u001B[34mn");
-        } else if (inMaelstromRoom) {
+        } else if (game.getRoomType(game.getPlayer().getPos()) == RoomType.MAELSTROM) {
             game.playerInMaelstromRoom (game.getPlayer().getPos());
             printColor("red", "You entered the same room as the maelstrom, you have both been moved.");
             playerTurn();
@@ -188,6 +185,7 @@ class GameUI {
 
         nearbyRooms(RoomType.PIT);
         nearbyRooms(RoomType.MAELSTROM);
+        nearbyRooms(RoomType.AMAROK);
     }
     void nearbyRooms (RoomType roomType) {
         for (int row = -1; row <= 1; row++) {
@@ -200,7 +198,8 @@ class GameUI {
                     String text = switch (roomType) {
                         case RoomType.PIT       -> "You feel a draft. There is a pit in a nearby room.";
                         case RoomType.MAELSTROM -> "You hear the growling and groaning of a maelstrom nearby.";
-                        default                 -> "";
+                        case RoomType.AMAROK    -> "You can smell the rotten stench of an amarok in a nearby room.";
+                        default                 -> throw new IllegalStateException("Unexpected value: " + roomType);
                     };
                     printColor("magenta", text);
                 }
