@@ -10,7 +10,7 @@ class Room {
     }
 
     public void setRoomType (RoomType roomType) {
-        if (this.roomType == RoomType.EMPTY || this.roomType == RoomType.MAELSTROM) {
+        if (this.roomType == RoomType.EMPTY || this.roomType == RoomType.MAELSTROM || this.roomType == RoomType.AMAROK) {
             this.roomType = roomType;
         }
     }

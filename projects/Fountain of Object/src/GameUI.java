@@ -4,9 +4,9 @@ class GameUI {
     Scanner myScanner = new Scanner(System.in);
     Game game;
     public GameUI () {
-        mainMenu ();
+        showInfo ();
     }
-    void mainMenu () {
+    private void mainMenu () {
         spacer();
         String text = """
                     1) Start a new game.
@@ -44,7 +44,7 @@ class GameUI {
             printColor("red", "This is not a valid command, please try again.");
         } while (true);
     }
-    void newGame () {
+    private void newGame () {
         int fieldSize;
 
         do {
@@ -78,13 +78,13 @@ class GameUI {
 
         winStatus();
     }
-    boolean defaultFunction (String input) {
+    private boolean defaultFunction (String input) {
         return switch (input.toLowerCase()) {
             case "quit", "menu", "help" , "cheat" -> true;
             default -> false;
         };
     }
-    void defaultFunctionExecute (String input) {
+    private void defaultFunctionExecute (String input) {
         switch (input.toLowerCase()) {
             case "quit":
                 printColor("red", "You have quit the game.");
@@ -102,7 +102,7 @@ class GameUI {
             default:
         }
     }
-    void winStatus () {
+    private void winStatus () {
         if (game.getRoomType(game.getPlayer().getPos()) == RoomType.PIT || game.getRoomType(game.getPlayer().getPos()) == RoomType.AMAROK) {
             game.getPlayer().setStatus(PlayerStatus.DEAD);
         }
@@ -123,13 +123,12 @@ class GameUI {
             playerTurn();
         }
     }
-    void playerTurn () {
+    private void playerTurn () {
         showPlayerStatus();
         playerChoice();
         winStatus();
     }
-    void playerChoice () {
-        Player player = game.getPlayer();
+    private void playerChoice () {
         do {
             printColor("magenta", "What do you want to do? ");
             String input = myScanner.nextLine().toLowerCase();
@@ -138,41 +137,81 @@ class GameUI {
                 return;
             }
 
-            if (input.equals("enable")) {
-                if (game.enableFountain()) {
+            switch (input.toLowerCase()) {
+                case "enable", "disable", "move north", "move east", "move south", "move west",
+                        "shoot north", "shoot east", "shoot south", "shoot west":
+                    validPlayerInput(input);
+                    return;
+                default:
+                    printColor("red", "\"" + input + "\" is not a valid command, please try again.");
                     break;
-                } else {
-                    printColor("red", "There is nothing to enable.");
-                }
             }
-            if (input.equals("disable")) {
-                if (game.disableFountain()) {
-                    break;
-                } else {
-                    printColor("red", "There is nothing to disable.");
-                }
-            }
+        } while (true);
+    }
+    private void validPlayerInput (String input) {
+        if (input.equals("enable") && !game.enableFountain()) {
+            printColor("red", "There is nothing to enable.");
+        }
 
-            Coordinate newCoordinate = switch(input) {
-                case "move north" -> player.getPos().plus(0, 1);
-                case "move east" -> player.getPos().plus(1, 0);
-                case "move south" -> player.getPos().plus(0, -1);
-                case "move west" -> player.getPos().plus (-1, 0);
+        if (input.equals("disable") && !game.disableFountain()) {
+            printColor("red", "There is nothing to disable.");
+        }
+        if (input.startsWith("move")) {
+            playerInputMove(input);
+        }
+        if (input.startsWith("shoot")) {
+            playerInputShoot(input);
+        }
+    }
+    private void playerInputMove(String input) {
+        Player player = game.getPlayer();
+        Coordinate newCoordinate = switch(input) {
+            case "move north" -> player.getPos().plus(0, 1);
+            case "move east" -> player.getPos().plus(1, 0);
+            case "move south" -> player.getPos().plus(0, -1);
+            case "move west" -> player.getPos().plus (-1, 0);
+            default -> null;
+        };
+
+        if (newCoordinate != null && game.coordinatesContains(newCoordinate)) {
+            player.setPos(newCoordinate);
+
+        } else {
+            printColor("red", "\"" + input + "\" is not a valid command, please try again.");
+        }
+    }
+    private void playerInputShoot(String input) {
+        Player player = game.getPlayer();
+        if (player.getArrows() > 0) {
+            Coordinate newCoordinate = switch (input) {
+                case "shoot north" -> player.getPos().plus(0, 1);
+                case "shoot east" -> player.getPos().plus(1, 0);
+                case "shoot south" -> player.getPos().plus(0, -1);
+                case "shoot west" -> player.getPos().plus(-1, 0);
                 default -> null;
             };
 
             if (newCoordinate != null && game.coordinatesContains(newCoordinate)) {
-                player.setPos(newCoordinate);
-                break;
+                RoomType roomType = game.getRoomType(newCoordinate);
+                if (roomType == RoomType.AMAROK || roomType == RoomType.MAELSTROM) {
+                    game.killBeast(newCoordinate);
+                    player.shootArrow();
+                    printColor("magenta", "You've shot a beast.");
+                } else {
+                    printColor("magenta", "You missed.");
+                }
+            } else {
+                printColor("red", "\"" + input + "\" is not a valid command, please try again.");
             }
-            printColor("red", "\"" + input + "\" is not a valid command, please try again.");
-        } while (true);
+        } else {
+            printColor("red", "You don't have any arrows left.");
+        }
     }
-    void showPlayerStatus () {
+    private void showPlayerStatus () {
         spacer();
         Coordinate playerPos = game.getPlayer().getPos();
         printColor("magenta", "You are in the room at (Row = " + game.getPlayer().getPos().x() + ", Column = " + game.getPlayer().getPos().y() + ").");
-
+        printColor("magenta", "You have " + game.getPlayer().getArrows() + " arrow(s) left.");
         switch (game.getRoomType(playerPos)) {
             case RoomType.ENTRANCE:
                 printColor("magenta", "You see light coming from the cavern entrance.");
@@ -187,7 +226,7 @@ class GameUI {
         nearbyRooms(RoomType.MAELSTROM);
         nearbyRooms(RoomType.AMAROK);
     }
-    void nearbyRooms (RoomType roomType) {
+    private void nearbyRooms (RoomType roomType) {
         for (int row = -1; row <= 1; row++) {
             for (int column = -1; column <= 1; column++) {
                 int x = game.getPlayer().getPos().x() + row;
@@ -207,27 +246,27 @@ class GameUI {
             }
         }
     }
-    void showInfo () {
+    private void showInfo () {
         spacer();
         String text = """
-                You will start at the entrance and you can move between other rooms by typing commands like the following:
-                "move north", "move south", "move east", and "move west". You are not be able to move past the end of the map.
-                The map size is determined when creating a new game.
-
-                Your goal is to find the fountain, enable it and than go back to the entrance.
-                But there will be some traps along the way, they can kill you, look out for those.
-
-                during playing you can always type in the following commands:
-                "menu" to show the main menu again.
-                "help" to show this info again.
-                "quit" to quit the game.""";
+                You enter the Cavern of Objects, a maze of rooms filled with dangerous pits in search
+                of the Fountain of Objects. Light is visible only in the entrance, and no other light
+                is seen anywhere in the caverns. You must navigate the Caverns with your other senses.
+                Find the Fountain of Objects, activate it, and return to the entrance. Look out for
+                pits. You will feel a breeze if a pit is in an adjacent room. If you enter a room with
+                a pit, you will die. Maelstroms are violent forces of sentient wind. Entering a room
+                with one could transport you to any other location in the caverns. You will be able to
+                hear their growling and groaning in nearby rooms. Amaroks roam the caverns.
+                Encountering one is certain death, but you can smell their rotten stench in nearby rooms.
+                You carry with you a bow and a quiver of arrows. You can use them to shoot monsters in
+                the caverns but be warned: you have a limited supply.""";
         printColor("blue", text);
         mainMenu();
     }
-    void spacer () {
+    private void spacer () {
         System.out.println("-------------------------------------------------------------------------------------------------------");
     }
-    void printColor (String color, String text) {
+    private void printColor (String color, String text) {
         String printColor = switch (color) {
             case "red"      -> "\u001B[31m";
             case "green"    -> "\u001B[32m";

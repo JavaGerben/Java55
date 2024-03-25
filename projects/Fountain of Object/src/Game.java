@@ -9,8 +9,8 @@ class Game {
         this.mapSize = mapSize;
         fountainStatus = FountainStatus.DISABLED;
         for (int row = 0; row < mapSize; row++) {
-            for (int collumn = 0; collumn < mapSize; collumn++) {
-                Coordinate pos = new Coordinate(row, collumn);
+            for (int column = 0; column < mapSize; column++) {
+                Coordinate pos = new Coordinate(row, column);
                 coordinates.put(pos, new Room());
             }
         }
@@ -89,8 +89,8 @@ class Game {
         int maelstromY = roomPos.y()-1;
 
         for (int row = maelstromX; row < mapSize; row++) {
-            for (int collumn = maelstromY; collumn < mapSize; collumn++) {
-                Coordinate pos = new Coordinate(row, collumn);
+            for (int column = maelstromY; column < mapSize; column++) {
+                Coordinate pos = new Coordinate(row, column);
                 if (coordinates.containsKey(pos)) {
                     Room room = coordinates.get(pos);
                     room.setRoomType(RoomType.MAELSTROM);
@@ -104,8 +104,8 @@ class Game {
         int playerY = roomPos.y()+1;
 
         for (int row = playerX; row >= 0; row--) {
-            for (int collumn = playerY; collumn >= 0; collumn--) {
-                Coordinate pos = new Coordinate(row, collumn);
+            for (int column = playerY; column >= 0; column--) {
+                Coordinate pos = new Coordinate(row, column);
                 if (coordinates.containsKey(pos)) {
                     player.setPos(pos);
                     return;
@@ -115,5 +115,11 @@ class Game {
     }
     public void cheat () {
         coordinates.forEach((key, value) -> System.out.println(key.x() + ", " + key.y() + " - " + value.getRoomType()));
+    }
+    public void killBeast (Coordinate coordinate) {
+        Room room = coordinates.get(coordinate);
+        if (room.getRoomType() == RoomType.AMAROK || room.getRoomType() == RoomType.MAELSTROM) {
+            room.setRoomType(RoomType.EMPTY);
+        }
     }
 }
