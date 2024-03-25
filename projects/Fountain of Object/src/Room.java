@@ -1,10 +1,8 @@
 class Room {
     private RoomType roomType;
-    private boolean active;
 
     public Room(){
         roomType = RoomType.EMPTY;
-        active = false;
     }
 
     public RoomType getRoomType () {
